@@ -1,3 +1,3 @@
 # Zork
-why doe things have to be hardy than they should
+Simplified version of the original game for class project
 
