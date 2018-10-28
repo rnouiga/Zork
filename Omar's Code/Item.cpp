@@ -5,8 +5,7 @@ Item::Item(xml_node<>* node){
 	declareItem(node);
 }
 
-Item::~Item(){
-}
+Item::~Item(){}
 
 void Item::declareItem(xml_node<>* node){
   turnOnStatus = 0;
@@ -29,24 +28,24 @@ void Item::declareItem(xml_node<>* node){
     if (string(myName) == indexName){
 			name = myValue;
 		}
+		else if (!myName.compare(indexDescrip)){
+			description = myValue;
+		}
     else if (!strcmp(myName, indexStat)){
 			status = myValue;
 		}
-    else if (!myName.compare(indexDescrip)){
-      description = myValue;
-    }
+		else if (string(myName) == indexTrig){
+			Trigger* trig = new Trigger(index);
+			trigger.push_back(trig);
+		}
     else if (!myName.compare(indexWrite)){
       writing = myValue;
     }
-    else if (string(myName) == indexTrig){
-      Trigger* trig = new Trigger(index);
-      trigger.push_back(trig);
-    }
     else if (!strcmp(myName, indexTurnOn)){
       turnOnStatus = 1;
-      for (xml_node<> *curr = index->first_node(); curr; curr = curr->next_sibling()){
-        currName = curr->name();
-        currValue = curr->value();
+      for (xml_node<> *head = index->first_node(); head; head = head->next_sibling()){
+        currName = head->name();
+        currValue = head->value();
         if(string(currName) == indexPrint){
           TurnOn.print = currValue;
         }
