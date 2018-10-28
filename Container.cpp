@@ -1,3 +1,4 @@
+#include <vector>
 #include 'Container.h'
 
 using namespace std;
@@ -24,16 +25,16 @@ void Container::makeContainer(node)
 		}
 		if(!strcmp(child -> name(), "accept"))
 		{
-			accept;
+			accept.push_back();
 		}
 		if(!strcmp(child -> name(), "item"))
 		{
-			item
+			item.push_back();
 		}
 		if(!strcmp(child -> name(), "trigger"))
 		{
 			Trigger* newTrigger = new Trigger(child);
-			tigger
+			tigger.push_back(newTrigger);
 		}
 		child = child -> next;
 }
