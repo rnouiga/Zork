@@ -1,4 +1,4 @@
-#include 'Creature.h'
+#include "Creature.h"
 using namespace as std;
 
 Creature::Creature(xml_node<>* node)
@@ -13,7 +13,7 @@ void Creature::makeCreature(xml_node<>* node)
 	{
 		if(!strcmp(child -> name(), "name"))
 		{
-			name = child ->;
+			name = child -> ;
 		}
 		if(!strcmp(child -> name(), "status"))
 		{
@@ -29,11 +29,12 @@ void Creature::makeCreature(xml_node<>* node)
 		}
 		if(!strcmp(child -> name(), "vulnerablility"))
 		{
-			
+			vulnerability.push_back();
 		}
 		if(!strcmp(child -> name(), "trigger"))
 		{
-			
+			Trigger* newTrigger = new Trigger(child);
+			trigger.push_back(newTrigger);
 		}
 		child = child -> next;
 	}
