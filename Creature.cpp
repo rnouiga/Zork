@@ -8,20 +8,20 @@ Creature::Creature(xml_node<>* node)
 
 void Creature::makeCreature(xml_node<>* node)
 {
-	xml_node<>* child =
+	xml_node<>* child = node -> first_node();
 	while(child)
 	{
 		if(!strcmp(child -> name(), "name"))
 		{
-			name = child -> ;
+			name = child -> child -> value;
 		}
 		if(!strcmp(child -> name(), "status"))
 		{
-			status = child -> ;
+			status = child -> child -> value();
 		}
 		if(!strcmp(child -> name(), "description"))
 		{
-			description = child -> ;
+			description = child -> child -> value();
 		}
 		if(!strcmp(child -> name(), "attack"))
 		{
@@ -29,7 +29,7 @@ void Creature::makeCreature(xml_node<>* node)
 		}
 		if(!strcmp(child -> name(), "vulnerablility"))
 		{
-			vulnerability.push_back();
+			vulnerability.push_back(child -> value());
 		}
 		if(!strcmp(child -> name(), "trigger"))
 		{
