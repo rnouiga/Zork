@@ -1,4 +1,8 @@
 #include <string>
+#include <vector>
+
+#include "Trigger.h"
+
 using namespace std;
 
 class Container
