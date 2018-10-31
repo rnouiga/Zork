@@ -1,6 +1,7 @@
-#include<string>
-#include 'Attack'
-#include 'Trigger'
+#include <string>
+#include <vector>
+#include "Attack.h"
+#include "Trigger.h"
 
 class Creature
 {
