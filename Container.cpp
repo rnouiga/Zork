@@ -1,9 +1,8 @@
-#include <vector>
 #include 'Container.h'
 
 using namespace std;
 
-Container::Container(node)
+Container::Container(xml_node<>* node)
 {
 	makeContainer(node);
 }
