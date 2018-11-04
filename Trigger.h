@@ -38,6 +38,8 @@ public:
    int actionIdx;
    int commandIdx;
    int printIdx;
+   int condition_count;
+   bool single;
    StatusT* stat;
    OwnerT* own;
    virtual ~Trigger();

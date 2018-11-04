@@ -14,6 +14,7 @@ Room::Room(xml_node<>* node)
     {
         if(strcmp(temp_node->name(), "name") == 0)
         {
+            //change dsome of this shit to transport pointer to corresponding item or container obejcts that are within the rooms
             name = temp_node->value();
         }
         else if(strcmp(temp_node->name(), "description") == 0)
@@ -48,6 +49,7 @@ Room::Room(xml_node<>* node)
         }
         else if(strcmp(temp_node->name(), "item") == 0)
         {
+            // Item * temp = new It
             items.push_back(temp_node->value());
         }
         else if(strcmp(temp_node->name(), "creature"))

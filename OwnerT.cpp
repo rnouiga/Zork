@@ -13,15 +13,15 @@ void OwnerT::declareItem(xml_node<>* node){
   string indexHas = "has";
   string indexOwner = "owner";
 	for (xml_node<> * index = node->first_node(); index; index = index->next_sibling()){
-    myName = index->name();
-    myValue = index->value();
+    	myName = index->name();
+    	myValue = index->value();
 		if (!myName.compare(indexObj)){
 			object = myValue;
 		}
-    else if (!myName.compare(indexHas)){
+    	else if (!myName.compare(indexHas)){
 			has = myValue;
 		}
-    else if (!myName.compare(indexOwner)){
+    	else if (!myName.compare(indexOwner)){
 			owner = myValue;
 		}
 	}

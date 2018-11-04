@@ -17,7 +17,7 @@ void Item::declareItem(xml_node<>* node){
   string indexStat = "status";
   string indexDescrip = "description";
   string indexWrite = "writing";
-  string indexTrig = "trigger"
+  string indexTrig = "trigger";
   string indexTurnOn = "turnon";
   string indexPrint = "print";
   string indexAction = "action";
@@ -31,7 +31,7 @@ void Item::declareItem(xml_node<>* node){
 		else if (!myName.compare(indexDescrip)){
 			description = myValue;
 		}
-    else if (!strcmp(myName, indexStat)){
+    else if (!myName.compare(indexStat)){
 			status = myValue;
 		}
 		else if (string(myName) == indexTrig){
@@ -41,16 +41,16 @@ void Item::declareItem(xml_node<>* node){
     else if (!myName.compare(indexWrite)){
       writing = myValue;
     }
-    else if (!strcmp(myName, indexTurnOn)){
+    else if (!myName.compare(indexTurnOn)){
       turnOnStatus = 1;
       for (xml_node<> *head = index->first_node(); head; head = head->next_sibling()){
         currName = head->name();
         currValue = head->value();
         if(string(currName) == indexPrint){
-          TurnOn.print = currValue;
+          turnOn.print = currValue;
         }
-        else if(!strcmp(currName, indexAction){
-          TurnOn.toDoActions.push_back(currValue);
+        else if(!currName.compare(indexAction)){
+          turnOn.toDoActions.push_back(currValue);
         }
       }
     }

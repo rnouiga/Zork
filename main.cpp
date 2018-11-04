@@ -8,7 +8,7 @@
 #include "rapidxml-1.13/rapidxml_utils.hpp"
 #include "rapidxml-1.13/rapidxml_print.hpp"
 
-vector<string> inventory;
+// vector<string> inventory;
 
 
 using namespace rapidxml;
@@ -18,7 +18,7 @@ struct Player
 //  Player();
 //  virtual ~Player();
     Room * current_room = NULL;
-    vector<String> inventory;
+    vector<Item*> inventory;
 };
 
 Player p1;
@@ -96,9 +96,22 @@ int main(int argc, char ** argv)
     bool game_done = false;
     while(game_done == false)
     {
-        std::getline(cin, input_string);
-        parse_input(input_string);
 
+        std::getline(cin, input_string);
+        if(input_string == "q")
+        {
+            break;
+        }
+        if(game_done == true)
+        {
+            break;
+        }
+
+        parse_input(input_string);
+        if(game_done == true)
+        {
+            break;
+        }
 
     }
 

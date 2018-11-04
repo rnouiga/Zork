@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cstdlib>
 #include "rapidxml-1.13/rapidxml.hpp"
 #include "rapidxml-1.13/rapidxml_utils.hpp"
 #include "rapidxml-1.13/rapidxml_print.hpp"
@@ -11,10 +12,10 @@
 using namespace std;
 using namespace rapidxml;
 
-typedef struct _TurnOn{
-  vector <string> toDoActions;
-  string print;
-}TurnOn;
+// typedef struct _TurnOn{
+//   vector <string> toDoActions;
+//   string print;
+// }TurnOn;
 
 class Item {
 public:

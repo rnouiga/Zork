@@ -5,6 +5,7 @@
 #include<sstream>
 #include<fstream>
 #include<cstdlib>
+#include<stdio.h>
 #include<vector>
 #include<string>
 #include "rapidxml-1.13/rapidxml.hpp"
