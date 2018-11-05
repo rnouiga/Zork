@@ -280,7 +280,6 @@ void take(string Item)
             p1.current_room->inventory.push_back(p1.current_room->items[i]);
             return;
         }
-
     }
     if(i == p1.current_room->items.size())
     {
@@ -304,16 +303,41 @@ void turn_on(string Item)
                     {
                         perform_action(item[j]->turnOn.toDoActions[k]);
                     }
-
                 }
             }
-
         }
     }
     if(i == p1.inventory.size())
     {
         std::cout << Item << " not in inventory." << std::endl;
         return;
+    }
+}
+void attack(string input)
+{
+    std::size_t index = input.find(" with ");
+    string c = input.substr(0, index);
+    string weapon = input.substr(index+6);
+
+    for(int i = 0;  i < p1.current_room->creatures.size(); i++)
+    {
+        if(!strcmp(p1.current_room->creatures[i], c))
+        {
+            for(int j = 0; j < creature.size(); j++)
+            {
+                if(!strcmp(creature[i]->name, c))
+                {
+                    std::cout << "You assault " << c << " with the " << weapon << std:endl;
+                    for(int k = 0; k < creature[i]->vulnerability.size(); k++)
+                    {
+                        if(!strcmp(creature[i]->vulnerability[k], weapon))
+                        {
+                            return_value = check_status(creature[i]->t);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 void drop(string input)
@@ -485,6 +509,15 @@ void parse_input(string input)
     else if(input.find("drop") != string::npos)
     {
         drop(input.erase(0, 4));
+    }
+    else if(input.find("turn on") != string::npos))
+    {
+        turn_on(input.erase(0,8));
+    }
+    else if(input.find("attack") != string::npos)
+    {
+        // input÷.erase(0, 7)
+        attack(input.erase(0, 7));
     }
 }
 bool check_non_command_triggers()
@@ -959,7 +992,7 @@ bool check_for_ownership(Trigger * info)
         }
     }
 }
-void check_status(Trigger * info)
+bool check_status(Trigger * info)
 {
     string status = info->stat->status;
     string object = info->stat->object;
