@@ -4,6 +4,7 @@
 #include "Trigger.h"
 
 using namespace std;
+using namespace rapidxml;
 
 class Container
 {
