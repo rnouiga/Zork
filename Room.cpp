@@ -1,11 +1,5 @@
 #include "Room.h"
 
-struct border
-{
-    string Name;
-    string Direction;
-}
-
 Room::Room(xml_node<>* node)
 {
     type = "regular";
@@ -31,17 +25,17 @@ Room::Room(xml_node<>* node)
         }
         else if(strcmp(temp_node->name(), "border") == 0)
         {
-            Border * temp_border = new Border;
-            xml_node<>* temp = temp_node->first_node()
+            border * temp_border = new border;
+            xml_node<>* temp = temp_node->first_node();
             while(temp)
             {
                 if(strcmp(temp->name(), "direction") == 0)
                 {
-                    temp_border->direction = temp->value();
+                    temp_border->Direction = temp->value();
                 }
                 else if(strcmp(temp->name(), "name") == 0)
                 {
-                    temp_border->name = temp->value;
+                    temp_border->Name = temp->value();
                 }
                 temp = temp->next_sibling();
             }
@@ -58,7 +52,7 @@ Room::Room(xml_node<>* node)
         }
         else if(strcmp(temp_node->name(), "container") == 0)
         {
-            containers.push_back(temp_node->value);
+            containers.push_back(temp_node->value());
         }
         else if(strcmp(temp_node->name(), "trigger") == 0)
         {

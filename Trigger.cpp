@@ -1,4 +1,5 @@
 #include "Trigger.h"
+#include "main_helper.h"
 
 Trigger::Trigger(xml_node<>* node) {
 	single = false;

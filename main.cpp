@@ -7,25 +7,13 @@
 #include "rapidxml-1.13/rapidxml.hpp"
 #include "rapidxml-1.13/rapidxml_utils.hpp"
 #include "rapidxml-1.13/rapidxml_print.hpp"
-
+#include "main_helper.h"
 // vector<string> inventory;
 
 
 using namespace rapidxml;
 
-struct Player
-{
-//  Player();
-//  virtual ~Player();
-    Room * current_room = NULL;
-    vector<string> inventory;
-};
 
-Player p1;
-std::vector<Room*> room;
-std::vector<Container*> container;
-std::vector<Item*> item;
-std::vector<Creatures*> creature;
 
 int main(int argc, char ** argv)
 {
@@ -52,19 +40,19 @@ int main(int argc, char ** argv)
     while(temp_node)
     {
         std::cout << temp_node->value() << std::endl;
-        if(temp_node->name() == "room")
+        if(!strcmp(temp_node->name(), "room"))
         {
             rooms.push_back(temp_node);
         }
-        else if(temp_node->name() == "item")
+        else if(!strcmp(temp_node->name(), "item"))
         {
             items.push_back(temp_node);
         }
-        else if(temp_node->name() == "container")
+        else if(!strcmp(temp_node->name(), "container"))
         {
             containers.push_back(temp_node);
         }
-        else if(temp_node->name() == "creature")
+        else if(!strcmp(temp_node->name(), "creature"))
         {
             creatures.push_back(temp_node);
         }
@@ -73,7 +61,7 @@ int main(int argc, char ** argv)
     for(int i = 0; i < rooms.size(); i++)
     {
         Room * temp_room = new Room(rooms[i]);
-        room.push_back(temp_room)
+        room.push_back(temp_room);
     }
     for(int i = 0; i < items.size(); i++)
     {
@@ -85,7 +73,7 @@ int main(int argc, char ** argv)
         Container * temp_container = new Container(containers[i]);
         container.push_back(temp_container);
     }
-    for(int i = 0; i <creatures.size(); i++
+    for(int i = 0; i <creatures.size(); i++)
     {
         Creature * temp_creature = new Creature(creatures[i]);
         creature.push_back(temp_creature);
@@ -94,9 +82,14 @@ int main(int argc, char ** argv)
     p1.current_room = room[0];
     string input_string;
     bool game_done = false;
+    bool return_value1;
     while(game_done == false)
     {
-
+        return_value1 = check_non_command_triggers();
+        if(game_done == true)
+        {
+            break;
+        }
         std::getline(cin, input_string);
         if(input_string == "q")
         {
@@ -106,13 +99,16 @@ int main(int argc, char ** argv)
         {
             break;
         }
-
+        trigger_command(input_string);
+        if(game_done == true)
+        {
+            break;
+        }
         parse_input(input_string);
         if(game_done == true)
         {
             break;
         }
-
     }
 
     return 0;

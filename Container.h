@@ -1,3 +1,6 @@
+#ifndef CONTAINER_H
+#define CONTAINER_H
+
 #include <string>
 #include <vector>
 #include "Trigger.h"
@@ -15,13 +18,15 @@ class Container
 		string status;
 		string description;
 		vector<string> accept;
-		vector<String> item;
+		vector<string> items;
 		vector<Trigger *> trigger;
 
-		Container();
-		Container(node);
-		~Container();
+		// Container();
+		Container(xml_node <>* node);
+		virtual ~Container();
 
 	private:
-		void makeContainer(node);
-}
+		void makeContainer(xml_node <>* node);
+};
+
+#endif

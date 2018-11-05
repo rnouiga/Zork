@@ -8,23 +8,33 @@
 #include<stdio.h>
 #include<vector>
 #include<string>
+#include "Trigger.h"
 #include "rapidxml-1.13/rapidxml.hpp"
 #include "rapidxml-1.13/rapidxml_utils.hpp"
 #include "rapidxml-1.13/rapidxml_print.hpp"
+// #include "main_helper.h"
+
+using namespace rapidxml;
+
+struct border
+{
+    std::string Name;
+    std::string Direction;
+};
 
 class Room
 {
 public:
-    string name;
-    string status;
-    string type;
-    string description;
+    std::string name;
+    std::string status;
+    std::string type;
+    std::string description;
     std::vector<border*> border_rooms;
-    std::vector<string> items;
-    std::vector<string> creatures;
+    std::vector<std::string> items;
+    std::vector<std::string> creatures;
     std::vector<Trigger *> triggers;
-    std::vector<string> containers;
+    std::vector<std::string> containers;
     Room(xml_node<>* node);
     virtual ~Room();
-}
+};
 #endif /*ROOM_H*/

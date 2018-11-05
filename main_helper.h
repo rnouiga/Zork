@@ -1,6 +1,8 @@
 #ifndef MAIN_HELPER_H
 #define MAIN_HELPER_H
 
+
+#include <cstdlib>
 #include <vector>
 #include <string>
 #include "Room.h"
@@ -9,7 +11,58 @@
 #include "Item.h"
 #include "Container.h"
 
+
+struct Player
+{
+    Room * current_room;
+    vector<string> inventory;
+};
+
+Player p1;
+std::vector<Room*> room;
+std::vector<Container*> container;
+std::vector<Item*> item;
+std::vector<Creature*> creature;
+
+
 bool game_done = false;
+
+string type_of(string obj)
+{
+    for(int i = 0 ; i < room.size(); i++)
+    {
+        if(!room[i]->name.compare(obj))
+        {
+            string r = "Room";
+            return r;
+        }
+    }
+    for(int i = 0 ; i < item.size(); i++)
+    {
+        if(!item[i]->name.compare(obj))
+        {
+            string i = "Item";
+            return i;
+        }
+    }
+    for(int i = 0 ; i < container.size(); i++)
+    {
+        if(!container[i]->name.compare(obj))
+        {
+            string c = "Container";
+            return c;
+        }
+    }
+    for(int i = 0 ; i < creature.size(); i++)
+    {
+        if(!creature[i]->name.compare(obj))
+        {
+            string cr = "Creature";
+            return cr;
+        }
+    }
+    return "\0";
+}
 
 void Add(string action)
 {
@@ -19,22 +72,22 @@ void Add(string action)
 
     string type_obj = type_of(obj);
     // string type_location = type_of(location);
-    if(!strcmp(type_obj, "Container"))
+    if(!(type_obj.compare( "Container")))
     {
         for(int i = 0; i < room.size(); i++)
         {
-            if(!strcmp(room[i]->name, location))
+            if(!(room[i]->name.compare(location)))
             {
                 room[i]->containers.push_back(obj);
                 return;
             }
         }
     }
-    if(!strcmp(type_obj, "Item"))
+    if(!type_obj.compare("Item"))
     {
         for(int i = 0; i < room.size(); i++)
         {
-            if(!strcmp(room[i]->name, location))
+            if(!room[i]->name.compare(location))
             {
                 room[i]->items.push_back(obj);
                 return;
@@ -42,18 +95,18 @@ void Add(string action)
         }
         for(int i = 0; i < container.size(); i++)
         {
-            if(!strcmp(container[i]->name, location))
+            if(!container[i]->name.compare(location))
             {
                 container[i]->items.push_back(obj);
                 return;
             }
         }
     }
-    if(!strcmp(type_obj, "Creature"))
+    if(!type_obj.compare( "Creature"))
     {
         for(int i = 0; i < room.size(); i++)
         {
-            if(!strcmp(room[i]->name, location))
+            if(!room[i]->name.compare(location))
             {
                 room[i]->creatures.push_back(obj);
                 return;
@@ -65,18 +118,18 @@ void Delete(string action)
 {
     string type_obj = type_of(action);
 
-    if(!strcmp(type_obj, "Room"))
+    if(!type_obj.compare("Room"))
     {
-        for(int i = 0; i < p1.current_room->border.size(); i++)
+        for(int i = 0; i < p1.current_room->border_rooms.size(); i++)
         {
-            if(p1.current_room->border[i]->name == action)
+            if(p1.current_room->border_rooms[i]->Name == action)
             {
-                p1.current_room->border.erase(p1.current_room->border.begin()+i);
+                p1.current_room->border_rooms.erase(p1.current_room->border_rooms.begin()+i);
                 return;
             }
         }
     }
-    else if(!strcmp(type_obj, "Item"))
+    else if(!type_obj.compare("Item"))
     {
         for(int i = 0; i < room.size(); i++)
         {
@@ -90,7 +143,7 @@ void Delete(string action)
             }
         }
     }
-    else if(!strcmp(type_obj, "Container"))
+    else if(!type_obj.compare( "Container"))
     {
         for(int i = 0; i < room.size(); i++)
         {
@@ -98,13 +151,13 @@ void Delete(string action)
             {
                 if(room[i]->containers[j] == action)
                 {
-                    room[i]->containers.erase(room[i]->container.begin()+j);
+                    room[i]->containers.erase(room[i]->containers.begin()+j);
                     return;
                 }
             }
         }
     }
-    else if(!strcmp(type_obj, "Creature"))
+    else if(!(type_obj.compare( "Creature")))
     {
         for(int i = 0; i < room.size(); i++)
         {
@@ -127,44 +180,44 @@ void Update(string action)
 
     string type_obj = type_of(obj);
 
-    if(!strcmp(type_obj, "Room"))
+    if(!type_obj.compare("Room"))
     {
         for(int i  = 0; i < room.size(); i++)
         {
-            if(!strcmp(room[i]->name, obj))
+            if(!(room[i]->name.compare(obj)))
             {
                 room[i]->status = status;
                 return;
             }
         }
     }
-    if(!strcmp(type_obj, "Item"))
+    if(!type_obj.compare("Item"))
     {
         for(int i  = 0; i < item.size(); i++)
         {
-            if(!strcmp(item[i]->name, obj))
+            if(!item[i]->name.compare(obj))
             {
                 item[i]->status = status;
                 return;
             }
         }
     }
-    if(!strcmp(type_obj, "Creature"))
+    if(!type_obj.compare("Creature"))
     {
         for(int i  = 0; i < creature.size(); i++)
         {
-            if(!strcmp(creature[i]->name, obj))
+            if(!creature[i]->name.compare(obj))
             {
                 creature[i]->status = status;
                 return;
             }
         }
     }
-    if(!strcmp(type_obj, "Container"))
+    if(!type_obj.compare("Container"))
     {
         for(int i  = 0; i < container.size(); i++)
         {
-            if(!strcmp(container[i], obj))
+            if(!container[i]->name.compare(obj))
             {
                 container[i]->status = status;
                 return;
@@ -185,6 +238,33 @@ void Game_over()
     std::cout << "Room is not Exit." << std::endl;
     return;
 }
+void perform_action(string a)
+{
+    if(a.find("Game Over") != string::npos)
+    {
+        Game_over();
+        return;
+    }
+    else if(a.find("Add") != string::npos)
+    {
+        string temp = a.erase(0,4);
+        Add(temp);
+        return;
+    }
+    else if(a.find("Delete") != string::npos)
+    {
+        string temp = a.erase(0,7);
+        Delete(temp);
+        return;
+    }
+    else if(a.find("Update") != string::npos)
+    {
+        string temp = a.erase(0, 7);
+        Update(temp);
+        return;
+    }
+    perform_action(a);
+}
 void print_inventory()
 {
     if(p1.inventory.size() == 0)
@@ -200,38 +280,38 @@ void print_inventory()
         std::cout << p1.inventory[p1.inventory.size() - 1] << std::endl;
     }
 }
-void open_container(string container)
+void open_container(string con)
 {
-    int i = 0;
-    for(i ; i < p1.current_room->containers.size(); i++)
+    int i;
+    for(i = 0; i < p1.current_room->containers.size(); i++)
     {
-        if(!strcmp(p1.current_room->containers[i]->name, container))
+        if(!p1.current_room->containers[i].compare(con))
         {
             for(int j = 0; j < container.size(); j++)
             {
-                if(!strcmp(container[j]->name, container))
+                if(!container[j]->name.compare(con))
                 {
                     if(container[j]->items.size() == 0)
                     {
-                        string end = container + " is empty.";
-                        std::cout << end << std::endl;
+                        std::cout << con << " is empty." << std::endl;
                         return;
                     }
                     else
                     {
+                        std::cout <<  con << " contains ";
                         if(container[j]->items.size() == 1)
                         {
-                            std::cout << container[j]->items[k]->name << std::endl;
-                            p1.current_room->items.push_back(container[j]->items[k]->name);
+                            std::cout << container[j]->items[0] << std::endl;
+                            p1.current_room->items.push_back(container[j]->items[0]);
                             return;
                         }
                         for(int k = 0; k < container[j]->items.size() - 1 ; k++)
                         {
-                            std::cout << container[j]->items[k]->name << ", " << std::endl;
-                            p1.current_room->items.push_back(container[j]->items[k]->name);
+                            std::cout << container[j]->items[k] << ", " << std::endl;
+                            p1.current_room->items.push_back(container[j]->items[k]);
                         }
-                        std::cout << container[j]->items[container[j]->items.size()-1]->name << std::endl;
-                        p1.current_room->items.push_back(container[j]->items[container[j]->items.size()-1]->name);
+                        std::cout << container[j]->items[container[j]->items.size()-1]<< std::endl;
+                        p1.current_room->items.push_back(container[j]->items[container[j]->items.size()-1]);
                         return;
                     }
                 }
@@ -245,11 +325,11 @@ void room_check(string input)
     int count = 0;
     for(border_index = 0; border_index < p1.current_room->border_rooms.size(); border_index++)
     {
-        if(!strcmp(p1.current_room->border_rooms[border_index]->direction, input))
+        if(!p1.current_room->border_rooms[border_index]->Direction.compare(input))
         {
             for(int i = 0; i < room.size(); i++)
             {
-                if(!strcmp(room[i]->name, p1.current_room->border_rooms[border_index]->name))
+                if(!room[i]->name.compare(p1.current_room->border_rooms[border_index]->Name))
                 {
                     p1.current_room = room[i];
                     return;
@@ -271,13 +351,13 @@ void room_check(string input)
 }
 void take(string Item)
 {
-    int i = 0;
-    for(i; i  < p1.current_room->items.size(); i++)
+    int i;
+    for(i = 0; i  < p1.current_room->items.size(); i++)
     {
-        if(!strcmp(p1.current_room->items[i], Item))
+        if(!p1.current_room->items[i].compare(Item))
         {
             std::cout << "Item" << Item << "added to inventory" << std::endl;
-            p1.current_room->inventory.push_back(p1.current_room->items[i]);
+            p1.inventory.push_back(p1.current_room->items[i]);
             return;
         }
     }
@@ -292,11 +372,11 @@ void turn_on(string Item)
     int i;
     for(i = 0; i < p1.inventory.size(); i++)
     {
-        if(!strcmp(p1.inventory[i], Item))
+        if(!p1.inventory[i].compare(Item))
         {
             for(int j = 0; j < item.size(); j++)
             {
-                if(!strcmp(Item, item[j]->name))
+                if(!Item.compare(item[j]->name))
                 {
                     cout << "You activate the " << Item << std::endl;
                     for(int k = 0; k < item[j]->turnOn.toDoActions.size(); k++)
@@ -313,40 +393,14 @@ void turn_on(string Item)
         return;
     }
 }
-void attack(string input)
-{
-    std::size_t index = input.find(" with ");
-    string c = input.substr(0, index);
-    string weapon = input.substr(index+6);
 
-    for(int i = 0;  i < p1.current_room->creatures.size(); i++)
-    {
-        if(!strcmp(p1.current_room->creatures[i], c))
-        {
-            for(int j = 0; j < creature.size(); j++)
-            {
-                if(!strcmp(creature[i]->name, c))
-                {
-                    std::cout << "You assault " << c << " with the " << weapon << std:endl;
-                    for(int k = 0; k < creature[i]->vulnerability.size(); k++)
-                    {
-                        if(!strcmp(creature[i]->vulnerability[k], weapon))
-                        {
-                            return_value = check_status(creature[i]->t);
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 void drop(string input)
 {
     int i;
     int count = 0;
     for(i = 0; i < p1.inventory.size(); i++)
     {
-        if(!strcmp(p1.inventory[i], input))
+        if(!p1.inventory[i].compare(input))
         {
             break;
         }
@@ -369,7 +423,7 @@ void put(string input)
     int a;
     for(a = 0; a < p1.inventory.size(); a++)
     {
-        if(!strcmp(item, p1.inventory[a]))
+        if(!item.compare(p1.inventory[a]))
         {
             break;
         }
@@ -379,17 +433,17 @@ void put(string input)
         std::cout << "Item not in inventory" << std::endl;
         return;
     }
-    for(int i = 0; i < p1.current_room->container.size(); i++)
+    for(int i = 0; i < p1.current_room->containers.size(); i++)
     {
-        if(!strcmp(p1.current_room->container[i]->name, loc))
+        if(!p1.current_room->containers[i].compare(loc))
         {
             for(int j = 0;  j < container.size(); j++)
             {
-                if(!strcmp(container[j]->name, loc))
+                if(!container[j]->name.compare(loc))
                 {
                     for(int k = 0; k < p1.inventory.size(); k++)
                     {
-                        if(!strcmp(p1.inventory[k], item)
+                        if(!p1.inventory[k].compare(item))
                         {
                             std::cout << "Item" << p1.inventory[k] << "added to " << container[j]->name << std::endl;
                             container[j]->items.push_back(p1.inventory[k]);
@@ -407,15 +461,15 @@ void read_item(string Item)
     int i = 0;
     for(i = 0;  i < p1.inventory.size(); i++)
     {
-        if(!strcmp(p1.inventory[i], Item))
+        if(!p1.inventory[i].compare(Item))
         {
             for(int j = 0; j < item.size(); j++)
             {
-                if(!strcmp(Item, item[j]))
+                if(!Item.compare(item[j]->name))
                 {
-                    if(item[j]->writing != NULL)
+                    if(item[j]->Ywrite)
                     {
-                        std::cout << p1.inventory[i]->writing << std::endl;
+                        std::cout << item[j]->writing << std::endl;
                         return;
                     }
                     else
@@ -431,6 +485,155 @@ void read_item(string Item)
     {
         std::cout << "Item not in inventory"  << std::endl;
         return;
+    }
+}
+bool check_status(Trigger * info)
+{
+    string status = info->stat->status;
+    string object = info->stat->object;
+
+    string o_type = type_of(object);
+
+    if(!o_type.compare("Room"))
+    {
+        for(int i = 0; i < room.size(); i++)
+        {
+            if(!room[i]->name.compare(object))
+            {
+                if(!room[i]->status.compare(status))
+                {
+                    if(info->printIdx)
+                    {
+                        std::cout << info->print << std::endl;
+                    }
+                    if(info->actionIdx)
+                    {
+                        for(int j = 0;  j < info->toDoActions.size(); j++)
+                        {
+                            perform_action(info->toDoActions[j]);
+                        }
+                    }
+                    return true;
+                }
+            }
+        }
+    }
+    else if (!o_type.compare("Item"))
+    {
+        for(int i = 0; i < item.size(); i++)
+        {
+            if(!item[i]->name.compare(object))
+            {
+                if(!item[i]->status.compare(status))
+                {
+                    if(info->printIdx)
+                    {
+                        std::cout << info->print << std::endl;
+                    }
+                    if(info->actionIdx)
+                    {
+                        for(int j = 0;  j < info->toDoActions.size(); j++)
+                        {
+                            perform_action(info->toDoActions[j]);
+                        }
+                    }
+                    return true;
+                }
+            }
+        }
+    }
+    else if(!o_type.compare("Container"))
+    {
+        for(int i = 0;  i < container.size(); i++)
+        {
+            if(!container[i]->name.compare(object))
+            {
+                if(!container[i]->status.compare(status))
+                {
+                    if(info->printIdx)
+                    {
+                        std::cout << info->print << std::endl;
+                    }
+                    if(info->actionIdx)
+                    {
+                        for(int j = 0;  j < info->toDoActions.size(); j++)
+                        {
+                            perform_action(info->toDoActions[j]);
+                        }
+                    }
+                    return true;
+                }
+            }
+        }
+    }
+    else if (!o_type.compare("Creature"))
+    {
+        for(int i = 0; i < creature.size(); i++)
+        {
+            if(!creature[i]->name.compare(object))
+            {
+                if(!creature[i]->status.compare(status))
+                {
+                    if(info->printIdx)
+                    {
+                        std::cout << info->print << std::endl;
+                    }
+                    if(info->actionIdx)
+                    {
+                        for(int j = 0;  j < info->toDoActions.size(); j++)
+                        {
+                            perform_action(info->toDoActions[j]);
+                        }
+                    }
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+void attack(string input)
+{
+    std::size_t index = input.find(" with ");
+    string c = input.substr(0, index);
+    string weapon = input.substr(index+6);
+    int a;
+    for(a = 0;  a < p1.inventory.size(); a++)
+    {
+        if(!weapon.compare(p1.inventory[a]))
+        {
+            break;
+        }
+    }
+    if(a == p1.inventory.size())
+    {
+        std::cout <<" Error" << std::endl;
+        return;
+    }
+    int i;
+    for(i = 0;  i < p1.current_room->creatures.size(); i++)
+    {
+        if(!p1.current_room->creatures[i].compare(c))
+        {
+            for(int j = 0; j < creature.size(); j++)
+            {
+                if(!creature[i]->name.compare(c))
+                {
+                    std::cout << "You assault " << c << " with the " << weapon << std::endl;
+                    for(int k = 0; k < creature[i]->vulnerability.size(); k++)
+                    {
+                        if(!creature[i]->vulnerability[k].compare(weapon))
+                        {
+                            check_status(creature[i]->t);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if(i == p1.current_room->creatures.size())
+    {
+        std::cout << "Error" << std::endl;
     }
 }
 void parse_input(string input)
@@ -484,14 +687,14 @@ void parse_input(string input)
             open_container(input);
         }
     }
-    else if(strcmp(input, "open exit") == 0)
+    else if(input.compare("open exit") == 0)
     {
-        if(p1.current_room->temp_room.type == "exit")
+        if(p1.current_room->type == "exit")
         {
             Game_over();
         }
     }
-    else if(strcmp(input, "i") == 0)
+    else if(input.compare("i") == 0)
     {
         print_inventory();
     }
@@ -510,7 +713,7 @@ void parse_input(string input)
     {
         drop(input.erase(0, 4));
     }
-    else if(input.find("turn on") != string::npos))
+    else if(input.find("turn on") != string::npos)
     {
         turn_on(input.erase(0,8));
     }
@@ -520,204 +723,22 @@ void parse_input(string input)
         attack(input.erase(0, 7));
     }
 }
-bool check_non_command_triggers()
-{
-    bool CM_trigRoom;
 
-    for(int i = 0; i < p1.current_room->triggers.size(); i++)
-    {
-        Trigger * trig = p1.current_room->triggers[i];
-        if(trig->commandIdx == 0)
-        {
-            if(!strcmp(trig->type, "permanent") || (!strcmp(trig->type, "single") && trig->single == false))
-            {
-                if(trig->condition_count == 3)
-                {
-                    CM_trigRoom = check_for_ownership(trig);
-                }
-                else if(t->condition == 2)
-                {
-                    CM_trigRoom = check_status(trig);
-                }
-                if(CM_trigRoom == true)
-                {
-                    trig->single == true;
-                }
-            }
-        }
-    }
-    bool CM_trigItem;
 
-    for(int i = 0 ; i < p1.current_room->items.size(); i++)
-    {
-        for(int j = 0; j < item.size(); j++)
-        {
-            if(!strcmp(p1.current_room->items[i], item[j]))
-            {
-                for(int a = 0; a < item[j]->triggers.size(); a++)
-                {
-                    Trigger * trig = item[j]->triggers[a];
-                    if(trig->commandIdx == 0)
-                    {
-                        if(!strcmp(trig->type, "permanent") || (!strcmp(trig->type, "single") && trig->single == false))
-                        {
-                            if(trig->condition_count == 3)
-                            {
-                                CM_trigItem = check_for_ownership(trig);
-                            }
-                            else if(t->condition == 2)
-                            {
-                                CM_trigItem = check_status(trig);
-                            }
-                            if(CM_trigItem== true)
-                            {
-                                trig->single == true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    bool CM_trigcreature;
 
-    for(int i = 0 ; i < p1.current_room->creatures.size(); i++)
-    {
-        for(int j = 0; j < creature.size(); j++)
-        {
-            if(!strcmp(p1.current_room->creatures[i], creature[j]))
-            {
-                for(int a = 0; a < creature[j]->triggers.size(); a++)
-                {
-                    Trigger * trig = creature[j]->triggers[a];
-                    if(trig->commandIdx == 0)
-                    {
-                        if(!strcmp(trig->type, "permanent") || (!strcmp(trig->type, "single") && trig->single == false))
-                        {
-                            if(trig->condition_count == 3)
-                            {
-                                CM_trigcreature = check_for_ownership(trig);
-                            }
-                            else if(t->condition == 2)
-                            {
-                                CM_trigcreature = check_status(trig);
-                            }
-                            if(CM_trigcreature== true)
-                            {
-                                trig->single == true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    bool CM_trigcontainer;
-    for(int i = 0 ; i < p1.current_room->containers.size(); i++)
-    {
-        for(int j = 0; j < container.size(); j++)
-        {
-            if(!strcmp(p1.current_room->containers[i], container[j]))
-            {
-                for(int a = 0; a < container[j]->triggers.size(); a++)
-                {
-                    Trigger * trig = container[j]->triggers[a];
-                    if(trig->commandIdx == 0)
-                    {
-                        if(!strcmp(trig->type, "permanent") || (!strcmp(trig->type, "single") && trig->single == false))
-                        {
-                            if(trig->condition_count == 3)
-                            {
-                                CM_trigcontainer = check_for_ownership(trig);
-                            }
-                            else if(trig->condition_count == 2)
-                            {
-                                CM_trigcontainer = check_status(trig);
-                            }
-                            if(CM_trigcontainer == true)
-                            {
-                                trig->single == true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    bool final_value = CM_trigItem || CM_trigRoom || CM_trigcreature || CM_trigcontainer; // see if any trigger had taken place over all
-    return final_value;
-}
-string type_of(string obj)
-{
-    for(int i = 0 ; i < room.size(); i++)
-    {
-        if(!room[i]->name.compare(obj))
-        {
-            return "Room";
-        }
-    }
-    for(int i = 0 ; i < item.size(); i++)
-    {
-        if(!item[i]->name.compare(obj))
-        {
-            return "Item";
-        }
-    }
-    for(int i = 0 ; i < container.size(); i++)
-    {
-        if(!container[i]->name.compare(obj))
-        {
-            return "Container";
-        }
-    }
-    for(int i = 0 ; i < creature.size(); i++)
-    {
-        if(!creature[i]->name.compare(obj))
-        {
-            return "Creature";
-        }
-    }
-}
-void perform_action(string a)
-{
-    if(!strcmp(a, "Game Over") != string::npos)
-    {
-        Game_over();
-        return;
-    }
-    else if(a.find("Add") != string::npos)
-    {
-        string temp = a.erase(0,4);
-        Add(temp);
-        return;
-    }
-    else if(a.find("Delete") != string::npos)
-    {
-        string temp = a.erase(0,7);
-        Delete(temp);
-        return;
-    }
-    else if(a.find("Update") != string::npos)
-    {
-        string temp = a.erase(0, 7);
-        Update(temp);
-        return;
-    }
-    perform_action(action);
-}
 bool check_for_ownership(Trigger * info)
 {
-    String owner = info->own->owner;
-    String has = info->own->has;
-    String object = info->own->object;
+    string owner = info->own->owner;
+    string has = info->own->has;
+    string object = info->own->object;
     int count  = 0;
-    if(!strcmp(owner, "inventory"))
+    if(!owner.compare("inventory"))
     {
         for(int i = 0; i < p1.inventory.size(); i++)
         {
-            if(!strcmp(p1.inventory[i]->name, object))
+            if(!p1.inventory[i].compare(object))
             {
-                if(!strcmp(has, "yes"))
+                if(!has.compare("yes"))
                 {
                     if(info->printIdx)
                     {
@@ -741,7 +762,7 @@ bool check_for_ownership(Trigger * info)
         }
         if(count == p1.inventory.size())
         {
-            if(!strcmp(has, "no"))
+            if(!has.compare("no"))
             {
                 if(info->printIdx)
                 {
@@ -765,20 +786,20 @@ bool check_for_ownership(Trigger * info)
     string value = type_of(owner);
     string obj = type_of(object);
     count = 0;
-    if(!strcmp(value, "Room"))
+    if(!value.compare("Room"))
     {
         for(int i = 0; i < room.size(); i++)
         {
-            if(!strcmp(room[i]->name, owner))
+            if(!room[i]->name.compare(owner))
             {
-                if(!strcmp(obj, "Item"))
+                if(!obj.compare("Item"))
                 {
                     count = 0;
                     for (int j = 0;  j < room[i]->items.size(); j++)
                     {
-                        if(!strcmp(room[i]->items[j]->name, object))
+                        if(!room[i]->items[j].compare(object))
                         {
-                            if(!strcmp(has, "yes"))
+                            if(!has.compare("yes"))
                             {
                                 if(info->printIdx)
                                 {
@@ -803,7 +824,7 @@ bool check_for_ownership(Trigger * info)
                     }
                     if(count == room[i]->items.size())
                     {
-                        if(!strcmp(has, "no"))
+                        if(!has.compare( "no"))
                         {
                             if(info->printIdx)
                             {
@@ -824,14 +845,14 @@ bool check_for_ownership(Trigger * info)
                         }
                     }
                 }
-                else if(!strcmp(obj, "Container"))
+                else if(!obj.compare("Container"))
                 {
                     count = 0;
                     for (int j = 0;  j < room[i]->containers.size(); j++)
                     {
-                        if(!strcmp(room[i]->containers[j]->name, object))
+                        if(!room[i]->containers[j].compare(object))
                         {
-                            if(!strcmp(has, "yes"))
+                            if(!has.compare("yes"))
                             {
                                 if(info->printIdx)
                                 {
@@ -856,7 +877,7 @@ bool check_for_ownership(Trigger * info)
                     }
                     if(count == room[i]->containers.size())
                     {
-                        if(!strcmp(has, "no"))
+                        if(!has.compare("no"))
                         {
                             if(info->printIdx)
                             {
@@ -877,14 +898,14 @@ bool check_for_ownership(Trigger * info)
                         }
                     }
                 }
-                else if(!strcmp(obj, "Creature"))
+                else if(!obj.compare("Creature"))
                 {
                     count = 0;
                     for (int j = 0;  j < room[i]->creatures.size(); j++)
                     {
-                        if(!strcmp(room[i]->creatures[j]->name, object))
+                        if(!room[i]->creatures[j].compare(object))
                         {
-                            if(!strcmp(has, "yes"))
+                            if(!has.compare("yes"))
                             {
                                 if(info->printIdx)
                                 {
@@ -909,7 +930,7 @@ bool check_for_ownership(Trigger * info)
                     }
                     if(count == room[i]->creatures.size())
                     {
-                        if(!strcmp(has, "no"))
+                        if(!has.compare("no"))
                         {
                             if(info->printIdx)
                             {
@@ -933,18 +954,18 @@ bool check_for_ownership(Trigger * info)
             }
         }
     }
-    else if (!strcmp(value, "Container"))
+    else if (!value.compare("Container"))
     {
         for(int i  = 0; i < container.size(); i++)
         {
-            if(!strcmp(container[i]->name, owner))
+            if(!container[i]->name.compare(owner))
             {
                 count = 0;
                 for(int j = 0; j < container[i]->items.size(); j++)
                 {
-                    if(!strcmp(container[i]->items[j]->name, object))
+                    if(!container[i]->items[j].compare(object))
                     {
-                        if(!strcmp(has, "yes"))
+                        if(!has.compare( "yes"))
                         {
                             if(info->printIdx)
                             {
@@ -968,7 +989,7 @@ bool check_for_ownership(Trigger * info)
                 }
                 if(count == container[i]->items.size())
                 {
-                    if(!strcmp(has, "no"))
+                    if(!has.compare("no"))
                     {
                         if(info->printIdx)
                         {
@@ -991,110 +1012,6 @@ bool check_for_ownership(Trigger * info)
             }
         }
     }
-}
-bool check_status(Trigger * info)
-{
-    string status = info->stat->status;
-    string object = info->stat->object;
-
-    string o_type = type_of(object);
-
-    if(!strcmp(o_type, "Room"))
-    {
-        for(int i = 0; i < room.size(); i++)
-        {
-            if(!strcmp(room[i]->name, object))
-            {
-                if(!strcmp(room[i]->status, status))
-                {
-                    if(info->printIdx)
-                    {
-                        std::cout << info->print << std::endl;
-                    }
-                    if(info->actionIdx)
-                    {
-                        for(int j = 0;  j < info->toDoActions.size(); j++)
-                        {
-                            perform_action(info->toDoActions[j]);
-                        }
-                    }
-                    return true;
-                }
-            }
-        }
-    }
-    else if (!strcmp(o_type, "Item"))
-    {
-        for(int i = 0; i < item.size(); i++)
-        {
-            if(!strcmp(item[i]->name, object))
-            {
-                if(!strcmp(item[i]->status, status))
-                {
-                    if(info->printIdx)
-                    {
-                        std::cout << info->print << std::endl;
-                    }
-                    if(info->actionIdx)
-                    {
-                        for(int j = 0;  j < info->toDoActions.size(); j++)
-                        {
-                            perform_action(info->toDoActions[j]);
-                        }
-                    }
-                    return true;
-                }
-            }
-        }
-    }
-    else if(!strcmp(o_type, "Container"))
-    {
-        for(int i = 0;  i < container.size(); i++)
-        {
-            if(!strcmp(container[i]->name, object))
-            {
-                if(!strcmp(container[i]->status, status))
-                {
-                    if(info->printIdx)
-                    {
-                        std::cout << info->print << std::endl;
-                    }
-                    if(info->actionIdx)
-                    {
-                        for(int j = 0;  j < info->toDoActions.size(); j++)
-                        {
-                            perform_action(info->toDoActions[j]);
-                        }
-                    }
-                    return true;
-                }
-            }
-        }
-    }
-    else if (!strcmp(o_type, "Creature"))
-    {
-        for(int i = 0; i < creature.size(); i++)
-        {
-            if(!strcmp(creature[i]->name, object))
-            {
-                if(!strcmp(creature[i]->status, status))
-                {
-                    if(info->printIdx)
-                    {
-                        std::cout << info->print << std::endl;
-                    }
-                    if(info->actionIdx)
-                    {
-                        for(int j = 0;  j < info->toDoActions.size(); j++)
-                        {
-                            perform_action(info->toDoActions[j]);
-                        }
-                    }
-                    return true;
-                }
-            }
-        }
-    }
     return false;
 }
 void trigger_command(string input)
@@ -1102,10 +1019,10 @@ void trigger_command(string input)
     bool temp = false;
     for(int i = 0; i < p1.current_room->triggers.size(); i++)
     {
-        Trigger * trig = p1.current_room->trigger[i];
-        if(trig->commandIdx && (!strcmp(trig->command, input)))
+        Trigger * trig = p1.current_room->triggers[i];
+        if(trig->commandIdx && (!trig->command.compare(input)))
         {
-            if(!strcmp(trig->type, "permanent") || (!strcmp(trig->type, "single") && trig->single == false))
+            if(!trig->type.compare("permanent") || (!trig->type.compare("single") && trig->single == false))
             {
                 if(trig->condition_count == 3)
                 {
@@ -1117,24 +1034,25 @@ void trigger_command(string input)
                 }
                 else if(temp == true)
                 {
-                    trig->single == true;
+                    trig->single = true;
                 }
             }
         }
     }
     temp = false;
-    for(int i = 0 ; i < p1.current_room->container.size(); i++)
+    for(int i = 0 ; i < p1.current_room->containers.size(); i++)
     {
         for(int j = 0; j < container.size(); j++)
         {
-            if(!strcmp(p1.current_room->container[i]->name, container[j]->name)){
+            if(!p1.current_room->containers[i].compare(container[j]->name))
+            {
 
-                for (int trig_num = 0;  trig_num < container[j]->triggers.size(); trig_num++) // loope for each potential triggers
+                for (int trig_num = 0;  trig_num < container[j]->trigger.size(); trig_num++) // loope for each potential triggers
                 {
-                    Trigger * trig = container[j]->triggers[trig_num];
-                    if(trig->commandIdx && !strcmp(input, trig->command))
+                    Trigger * trig = container[j]->trigger[trig_num];
+                    if(trig->commandIdx && !input.compare(trig->command))
                     {
-                        if(!strcmp(trig->type, "permanent") || (!strcmp(trig->type, "single") && trig->single == false))
+                        if(!trig->type.compare("permanent") || (!trig->type.compare("single") && trig->single == false))
                         {
 
                             if(trig->condition_count == 2)
@@ -1160,14 +1078,15 @@ void trigger_command(string input)
     {
         for(int j = 0; j < creature.size(); j++)
         {
-            if(!strcmp(p1.current_room->creatures[i]->name, creature[j]->name)){
+            if(!p1.current_room->creatures[i].compare(creature[j]->name))
+            {
 
-                for (int trig_num = 0;  trig_num < creature[j]->triggers.size(); trig_num++) // loope for each potential triggers
+                for (int trig_num = 0;  trig_num < creature[j]->trigger.size(); trig_num++) // loope for each potential triggers
                 {
-                    Trigger * trig = creature[j]->triggers[trig_num];
-                    if(trig->commandIdx && !strcmp(input, trig->command))
+                    Trigger * trig = creature[j]->trigger[trig_num];
+                    if(trig->commandIdx && !input.compare(trig->command))
                     {
-                        if(!strcmp(trig->type, "permanent") || (!strcmp(trig->type, "single") && trig->single == false))
+                        if(!trig->type.compare("permanent") || (!trig->type.compare("single") && trig->single == false))
                         {
                             if(trig->condition_count == 2)
                             {
@@ -1192,14 +1111,14 @@ void trigger_command(string input)
     {
         for(int j = 0; j < item.size(); j++)
         {
-            if(!strcmp(p1.inventory[i], item[j]->name)){
+            if(!p1.inventory[i].compare(item[j]->name)){
 
-                for (int trig_num = 0;  trig_num < item[j]->triggers.size(); trig_num++) // loope for each potential triggers
+                for (int trig_num = 0;  trig_num < item[j]->trigger.size(); trig_num++) // loope for each potential triggers
                 {
-                    Trigger * trig = item[j]->triggers[trig_num];
-                    if(trig->commandIdx && !strcmp(input, trig->command))
+                    Trigger * trig = item[j]->trigger[trig_num];
+                    if(trig->commandIdx && !input.compare(trig->command))
                     {
-                        if(!strcmp(trig->type, "permanent") || (!strcmp(trig->type, "single") && trig->single == false))
+                        if(!trig->type.compare("permanent") || (!trig->type.compare("single") && trig->single == false))
                         {
                             if(trig->condition_count == 3)
                             {
@@ -1220,7 +1139,133 @@ void trigger_command(string input)
         }
     }
 }
+bool check_non_command_triggers()
+{
+    bool CM_trigRoom;
 
+    for(int i = 0; i < p1.current_room->triggers.size(); i++)
+    {
+        Trigger * trig = p1.current_room->triggers[i];
+        if(trig->commandIdx == 0)
+        {
+            if(!trig->type.compare("permanent") || (!trig->type.compare("single") && trig->single == false))
+            {
+                if(trig->condition_count == 3)
+                {
+                    CM_trigRoom = check_for_ownership(trig);
+                }
+                else if(trig->condition_count == 2)
+                {
+                    CM_trigRoom = check_status(trig);
+                }
+                if(CM_trigRoom == true)
+                {
+                    trig->single = true;
+                }
+            }
+        }
+    }
+    bool CM_trigItem;
+
+    for(int i = 0 ; i < p1.current_room->items.size(); i++)
+    {
+        for(int j = 0; j < item.size(); j++)
+        {
+            if(!p1.current_room->items[i].compare(item[j]->name))
+            {
+                for(int a = 0; a < item[j]->trigger.size(); a++)
+                {
+                    Trigger * trig = item[j]->trigger[a];
+                    if(trig->commandIdx == 0)
+                    {
+                        if(!trig->type.compare("permanent") || (!trig->type.compare("single") && trig->single == false))
+                        {
+                            if(trig->condition_count == 3)
+                            {
+                                CM_trigItem = check_for_ownership(trig);
+                            }
+                            else if(trig->condition_count == 2)
+                            {
+                                CM_trigItem = check_status(trig);
+                            }
+                            if(CM_trigItem == true)
+                            {
+                                trig->single = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    bool CM_trigcreature;
+
+    for(int i = 0 ; i < p1.current_room->creatures.size(); i++)
+    {
+        for(int j = 0; j < creature.size(); j++)
+        {
+            if(!p1.current_room->creatures[i].compare(creature[j]->name))
+            {
+                for(int a = 0; a < creature[j]->trigger.size(); a++)
+                {
+                    Trigger * trig = creature[j]->trigger[a];
+                    if(trig->commandIdx == 0)
+                    {
+                        if(!trig->type.compare("permanent") || (!trig->type.compare("single") && trig->single == false))
+                        {
+                            if(trig->condition_count == 3)
+                            {
+                                CM_trigcreature = check_for_ownership(trig);
+                            }
+                            else if(trig->condition_count == 2)
+                            {
+                                CM_trigcreature = check_status(trig);
+                            }
+                            if(CM_trigcreature== true)
+                            {
+                                trig->single = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    bool CM_trigcontainer;
+    for(int i = 0 ; i < p1.current_room->containers.size(); i++)
+    {
+        for(int j = 0; j < container.size(); j++)
+        {
+            if(!p1.current_room->containers[i].compare(container[j]->name))
+            {
+                for(int a = 0; a < container[j]->trigger.size(); a++)
+                {
+                    Trigger * trig = container[j]->trigger[a];
+                    if(trig->commandIdx == 0)
+                    {
+                        if(!trig->type.compare("permanent") || (!trig->type.compare("single") && trig->single == false))
+                        {
+                            if(trig->condition_count == 3)
+                            {
+                                CM_trigcontainer = check_for_ownership(trig);
+                            }
+                            else if(trig->condition_count == 2)
+                            {
+                                CM_trigcontainer = check_status(trig);
+                            }
+                            if(CM_trigcontainer == true)
+                            {
+                                trig->single = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    bool final_value = CM_trigItem || CM_trigRoom || CM_trigcreature || CM_trigcontainer; // see if any trigger had taken place over all
+    return final_value;
+}
 
 
 #endif

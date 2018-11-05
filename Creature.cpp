@@ -1,19 +1,17 @@
 #include "Creature.h"
-#include "rapidxml-1.13/rapidxml.hpp"
-#include "rapidxml-1.13/rapidxml_utils.hpp"
-#include "rapidxml-1.13/rapidxml_print.hpp"
 
-using namespace as std;
+using namespace std;
 using namespace rapidxml;
 
 Creature::Creature(xml_node<>* node)
 {
 	makeCreature(node);
 }
+Creature::~Creature() {}
 
 void Creature::makeCreature(xml_node<>* node)
 {
-	xml_node<>* child = node -> first_node();
+	xml_node<>* child = node->first_node();
 	while(child)
 	{
 		if(!strcmp(child -> name(), "name"))
@@ -30,7 +28,7 @@ void Creature::makeCreature(xml_node<>* node)
 		}
 		if(!strcmp(child -> name(), "attack"))
 		{
-			t = new Trigger(child->first_node);
+			t = new Trigger(child);
 			t->type = "permanent";
 		}
 		if(!strcmp(child -> name(), "vulnerablility"))

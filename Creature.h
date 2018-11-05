@@ -1,25 +1,27 @@
+#ifndef CREATURE_H
+#define CREATURE_H
+
 #include <string>
 #include <vector>
-#include "Attack.h"
 #include "Trigger.h"
+#include "rapidxml-1.13/rapidxml.hpp"
+#include "rapidxml-1.13/rapidxml_utils.hpp"
+#include "rapidxml-1.13/rapidxml_print.hpp"
+// #include "main_helper.h"
 
 class Creature
 {
-	public:
-		std::string name;
-		std::string status;
-		std::string description;
-		Trigger * t;
-		std::vector<string> vulnerability;
-		std::vector<Trigger*> trigger;
-		// std::string print;
-		// std::vector<string> actions;
+public:
+	std::string name;
+	std::string status;
+	std::string description;
+	Trigger * t;
+	std::vector<string> vulnerability;
+	std::vector<Trigger*> trigger;
+	Creature(xml_node<>* node);
+	virtual ~Creature();
+private:
+	void makeCreature(xml_node<>* node);
+};
 
-
-		Creature();
-		Creature(node);
-		~Creature();
-
-	private:
-		void makeCreature(node);
-}
+#endif

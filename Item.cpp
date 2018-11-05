@@ -13,6 +13,7 @@ void Item::declareItem(xml_node<>* node){
   string myValue;
   string currName;
   string currValue;
+  Ywrite = false;
   string indexName = "name";
   string indexStat = "status";
   string indexDescrip = "description";
@@ -40,6 +41,7 @@ void Item::declareItem(xml_node<>* node){
 		}
     else if (!myName.compare(indexWrite)){
       writing = myValue;
+	  Ywrite = true;
     }
     else if (!myName.compare(indexTurnOn)){
       turnOnStatus = 1;

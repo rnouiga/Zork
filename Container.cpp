@@ -1,15 +1,16 @@
-#include 'Container.h'
+#include "Container.h"
+#include "main_helper.h"
 
-using namespace std;
+// using namespace std;
 
 Container::Container(xml_node<>* node)
 {
 	makeContainer(node);
 }
 
-void Container::makeContainer(node)
+void Container::makeContainer(xml_node<>* node)
 {
-	child = node -> node -> frist_node();
+	xml_node<>* child = node->first_node();
 	while(child)
 	{
 		if(!strcmp(child -> name(), "name"))
@@ -30,13 +31,13 @@ void Container::makeContainer(node)
 		}
 		if(!strcmp(child -> name(), "item"))
 		{
-			item.push_back(child -> value());
+			items.push_back(child -> value());
 		}
 		if(!strcmp(child -> name(), "trigger"))
 		{
 			Trigger* newTrigger = new Trigger(child);
-			tigger.push_back(newTrigger);
+			trigger.push_back(newTrigger);
 		}
-		child = child -> next();
+		child = child -> next_sibling();
 	}
 }

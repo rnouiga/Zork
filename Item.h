@@ -21,8 +21,9 @@ class Item {
 public:
    string name;
    string status;
-   string writing = NULL;
+   string writing;
    string description;
+   bool Ywrite;
    vector <Trigger*> trigger;
    TurnOn turnOn;
    int turnOnStatus;
