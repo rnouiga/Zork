@@ -1,5 +1,10 @@
 #include "Creature.h"
+#include "rapidxml-1.13/rapidxml.hpp"
+#include "rapidxml-1.13/rapidxml_utils.hpp"
+#include "rapidxml-1.13/rapidxml_print.hpp"
+
 using namespace as std;
+using namespace rapidxml;
 
 Creature::Creature(xml_node<>* node)
 {
