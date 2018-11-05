@@ -195,19 +195,47 @@ void print_inventory()
     {
         for(int i = 0; i < p1.inventory.size() - 1; i++)
         {
-            std::cout << p1.inventory[i]->name << ", ";
+            std::cout << p1.inventory[i] << ", ";
         }
-        std::cout << p1.inventory[p1.inventory.size() - 1]->name << std::endl;
+        std::cout << p1.inventory[p1.inventory.size() - 1] << std::endl;
     }
 }
 void open_container(string container)
 {
     int i = 0;
-    for(i; i < p1.current_room->containers.size(); i++)
+    for(i ; i < p1.current_room->containers.size(); i++)
     {
-        if(p1.current_room->containers[i]->name == container)
+        if(!strcmp(p1.current_room->containers[i]->name, container))
         {
-            for(int j)
+            for(int j = 0; j < container.size(); j++)
+            {
+                if(!strcmp(container[j]->name, container))
+                {
+                    if(container[j]->items.size() == 0)
+                    {
+                        string end = container + " is empty.";
+                        std::cout << end << std::endl;
+                        return;
+                    }
+                    else
+                    {
+                        if(container[j]->items.size() == 1)
+                        {
+                            std::cout << container[j]->items[k]->name << std::endl;
+                            p1.current_room->items.push_back(container[j]->items[k]->name);
+                            return;
+                        }
+                        for(int k = 0; k < container[j]->items.size() - 1 ; k++)
+                        {
+                            std::cout << container[j]->items[k]->name << ", " << std::endl;
+                            p1.current_room->items.push_back(container[j]->items[k]->name);
+                        }
+                        std::cout << container[j]->items[container[j]->items.size()-1]->name << std::endl;
+                        p1.current_room->items.push_back(container[j]->items[container[j]->items.size()-1]->name);
+                        return;
+                    }
+                }
+            }
         }
     }
 }
@@ -217,39 +245,161 @@ void room_check(string input)
     int count = 0;
     for(border_index = 0; border_index < p1.current_room->border_rooms.size(); border_index++)
     {
-        if(p1.current_room->border_rooms[border_index]->direction == input)
+        if(!strcmp(p1.current_room->border_rooms[border_index]->direction, input))
         {
-
+            for(int i = 0; i < room.size(); i++)
+            {
+                if(!strcmp(room[i]->name, p1.current_room->border_rooms[border_index]->name))
+                {
+                    p1.current_room = room[i];
+                    return;
+                }
+            }
         }
+        count += 1;
     }
-    if()
+    if(count == border_index)
+    {
+        std::cout << "Can't go that way" << std::endl;
+        return;
+    }
+    else
+    {
+        std::cout << p1.current_room->description << std::endl;
+        return;
+    }
 }
 void take(string Item)
 {
-    for(int i = 0; i  < p1.current_room->items.size(); i++)
+    int i = 0;
+    for(i; i  < p1.current_room->items.size(); i++)
     {
         if(!strcmp(p1.current_room->items[i], Item))
         {
+            std::cout << "Item" << Item << "added to inventory" << std::endl;
             p1.current_room->inventory.push_back(p1.current_room->items[i]);
+            return;
+        }
+
+    }
+    if(i == p1.current_room->items.size())
+    {
+        std::cout << Item << "not in room." << std::endl;
+        return;
+    }
+}
+void turn_on(string Item)
+{
+    int i;
+    for(i = 0; i < p1.inventory.size(); i++)
+    {
+        if(!strcmp(p1.inventory[i], Item))
+        {
+            for(int j = 0; j < item.size(); j++)
+            {
+                if(!strcmp(Item, item[j]->name))
+                {
+                    cout << "You activate the " << Item << std::endl;
+                    for(int k = 0; k < item[j]->turnOn.toDoActions.size(); k++)
+                    {
+                        perform_action(item[j]->turnOn.toDoActions[k]);
+                    }
+
+                }
+            }
+
         }
     }
+    if(i == p1.inventory.size())
+    {
+        std::cout << Item << " not in inventory." << std::endl;
+        return;
+    }
+}
+void drop(string input)
+{
+    int i;
+    int count = 0;
+    for(i = 0; i < p1.inventory.size(); i++)
+    {
+        if(!strcmp(p1.inventory[i], input))
+        {
+            break;
+        }
+        count += 1;
+    }
+    if(count == i)
+    {
+        std::cout << input << " not in inventory." << std::endl;
+        return;
+    }
+    p1.current_room->items.push_back(p1.inventory[i]);
+    std::cout << input << " dropped." << std::endl;
+    return;
+}
+void put(string input)
+{
+    std::size_t index = input.find(" in ");
+    string item = input.substr(0, index);
+    string loc = input.substr(index+4);
+    int a;
+    for(a = 0; a < p1.inventory.size(); a++)
+    {
+        if(!strcmp(item, p1.inventory[a]))
+        {
+            break;
+        }
+    }
+    if(a == p1.inventory.size())
+    {
+        std::cout << "Item not in inventory" << std::endl;
+        return;
+    }
+    for(int i = 0; i < p1.current_room->container.size(); i++)
+    {
+        if(!strcmp(p1.current_room->container[i]->name, loc))
+        {
+            for(int j = 0;  j < container.size(); j++)
+            {
+                if(!strcmp(container[j]->name, loc))
+                {
+                    for(int k = 0; k < p1.inventory.size(); k++)
+                    {
+                        if(!strcmp(p1.inventory[k], item)
+                        {
+                            std::cout << "Item" << p1.inventory[k] << "added to " << container[j]->name << std::endl;
+                            container[j]->items.push_back(p1.inventory[k]);
+                            p1.inventory.erase(p1.inventory.begin() + k);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
 void read_item(string Item)
 {
     int i = 0;
     for(i = 0;  i < p1.inventory.size(); i++)
     {
-        if(!strcmp(p1.inventory[i]->name, Item))
+        if(!strcmp(p1.inventory[i], Item))
         {
-            if(p1.inventory[i]->writing != NULL)
+            for(int j = 0; j < item.size(); j++)
             {
-                std::cout << p1.inventory[i]->writing << std::endl;
-                return;
-            }
-            else
-            {
-                std::cout << "Nothing written" << std::endl;
-                return;
+                if(!strcmp(Item, item[j]))
+                {
+                    if(item[j]->writing != NULL)
+                    {
+                        std::cout << p1.inventory[i]->writing << std::endl;
+                        return;
+                    }
+                    else
+                    {
+                        std::cout << "Nothing written" << std::endl;
+                        return;
+                    }
+                }
             }
         }
     }
@@ -320,6 +470,21 @@ void parse_input(string input)
     else if(strcmp(input, "i") == 0)
     {
         print_inventory();
+    }
+    else if(input.find("put") != string::npos)
+    {
+        if(input.size() > 3)
+        {
+            put(input.erase(0, 3));
+        }
+        else
+        {
+            std::cout << "error" << std::endl;
+        }
+    }
+    else if(input.find("drop") != string::npos)
+    {
+        drop(input.erase(0, 4));
     }
 }
 bool check_non_command_triggers()

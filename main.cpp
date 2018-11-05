@@ -18,7 +18,7 @@ struct Player
 //  Player();
 //  virtual ~Player();
     Room * current_room = NULL;
-    vector<Item*> inventory;
+    vector<string> inventory;
 };
 
 Player p1;
