@@ -15,7 +15,11 @@ public:
 	std::string name;
 	std::string status;
 	std::string description;
-	Trigger * t;
+	// Trigger * t;
+	std::string print;
+	std::vector<string> toDoActions;
+	bool attackF;
+	bool aprint;
 	std::vector<string> vulnerability;
 	std::vector<Trigger*> trigger;
 	Creature(xml_node<>* node);

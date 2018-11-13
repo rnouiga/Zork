@@ -5,6 +5,8 @@ using namespace rapidxml;
 
 Creature::Creature(xml_node<>* node)
 {
+	attackF = false;
+	aprint = false;
 	makeCreature(node);
 }
 Creature::~Creature() {}
@@ -28,12 +30,26 @@ void Creature::makeCreature(xml_node<>* node)
 		}
 		if(!strcmp(child -> name(), "attack"))
 		{
-			t = new Trigger(child);
-			t->type = "permanent";
+			xml_node<>* temp = child->first_node();
+			while(temp)
+			{
+				if(!strcmp(temp->name(),"print"))
+				{
+					aprint = true;
+					print = temp->value();
+				}
+				else if(!strcmp(temp->name(), "action"))
+				{
+					toDoActions.push_back(temp->value());
+				}
+				temp = temp->next_sibling();
+			}
+			attackF = true;
 		}
-		if(!strcmp(child -> name(), "vulnerablility"))
+		if(!strcmp(child -> name(), "vulnerability"))
 		{
 			vulnerability.push_back(child -> value());
+
 		}
 		if(!strcmp(child -> name(), "trigger"))
 		{

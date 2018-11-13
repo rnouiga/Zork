@@ -1,5 +1,5 @@
 #include "Trigger.h"
-#include "main_helper.h"
+// #include "main_helper.h"
 
 Trigger::Trigger(xml_node<>* node) {
 	single = false;
@@ -19,6 +19,7 @@ int Trigger::counter(xml_node<> * node){
 void Trigger::declareItem(xml_node<>* node){
 	string myName;
 	string myValue;
+	type = "permanent";
 	string indexType = "type";
 	string indexAction = "action";
 	string indexCondition = "condition";

@@ -1,12 +1,10 @@
 #include "Container.h"
-#include "main_helper.h"
-
-// using namespace std;
 
 Container::Container(xml_node<>* node)
 {
 	makeContainer(node);
 }
+Container::~Container(){}
 
 void Container::makeContainer(xml_node<>* node)
 {
@@ -31,6 +29,7 @@ void Container::makeContainer(xml_node<>* node)
 		}
 		if(!strcmp(child -> name(), "item"))
 		{
+			// std::cout << "kill me" << child->value() <<  std::endl;
 			items.push_back(child -> value());
 		}
 		if(!strcmp(child -> name(), "trigger"))

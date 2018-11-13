@@ -37,9 +37,12 @@ int main(int argc, char ** argv)
 
     xml_node<> *node = doc.first_node();
     xml_node<> *temp_node = node->first_node();
+    // std::cout << temp_node->name() << std::endl;
+    //print what the node is
+    // if(strcmp(temp_node->name())
     while(temp_node)
     {
-        std::cout << temp_node->value() << std::endl;
+        // std::cout << temp_node->value() << std::endl;
         if(!strcmp(temp_node->name(), "room"))
         {
             rooms.push_back(temp_node);
@@ -61,6 +64,7 @@ int main(int argc, char ** argv)
     for(int i = 0; i < rooms.size(); i++)
     {
         Room * temp_room = new Room(rooms[i]);
+        // std::cout <<  << std::endl;
         room.push_back(temp_room);
     }
     for(int i = 0; i < items.size(); i++)
@@ -81,8 +85,10 @@ int main(int argc, char ** argv)
 
     p1.current_room = room[0];
     string input_string;
-    bool game_done = false;
+    std::cout << p1.current_room->description << std::endl;
+
     bool return_value1;
+    bool return_value2;
     while(game_done == false)
     {
         return_value1 = check_non_command_triggers();
@@ -99,10 +105,14 @@ int main(int argc, char ** argv)
         {
             break;
         }
-        trigger_command(input_string);
+        return_value2 = trigger_command(input_string);
         if(game_done == true)
         {
             break;
+        }
+        if(return_value2)
+        {
+            continue;
         }
         parse_input(input_string);
         if(game_done == true)
@@ -110,6 +120,5 @@ int main(int argc, char ** argv)
             break;
         }
     }
-
     return 0;
 }

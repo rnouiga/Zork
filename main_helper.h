@@ -11,6 +11,7 @@
 #include "Item.h"
 #include "Container.h"
 
+bool game_done = false;
 
 struct Player
 {
@@ -25,7 +26,9 @@ std::vector<Item*> item;
 std::vector<Creature*> creature;
 
 
-bool game_done = false;
+void perform_action(string a);
+
+// bool game_done = false;
 
 string type_of(string obj)
 {
@@ -228,43 +231,12 @@ void Update(string action)
 }
 void Game_over()
 {
-    if(p1.current_room->type == "exit")
-    {
-        std::cout  << "Game Over" << std::endl;
-        std::cout << "Victory!" << std::endl;
-        game_done = true;
-        return;
-    }
-    std::cout << "Room is not Exit." << std::endl;
+    std::cout  << "Game Over" << std::endl;
+    std::cout << "Victory!" << std::endl;
+    game_done = true;
     return;
 }
-void perform_action(string a)
-{
-    if(a.find("Game Over") != string::npos)
-    {
-        Game_over();
-        return;
-    }
-    else if(a.find("Add") != string::npos)
-    {
-        string temp = a.erase(0,4);
-        Add(temp);
-        return;
-    }
-    else if(a.find("Delete") != string::npos)
-    {
-        string temp = a.erase(0,7);
-        Delete(temp);
-        return;
-    }
-    else if(a.find("Update") != string::npos)
-    {
-        string temp = a.erase(0, 7);
-        Update(temp);
-        return;
-    }
-    perform_action(a);
-}
+
 void print_inventory()
 {
     if(p1.inventory.size() == 0)
@@ -283,14 +255,20 @@ void print_inventory()
 void open_container(string con)
 {
     int i;
+    // std::cout << con << std::endl;
+    // std::cout << p1.current_room->containers.size() << std::endl;
     for(i = 0; i < p1.current_room->containers.size(); i++)
     {
         if(!p1.current_room->containers[i].compare(con))
         {
+
             for(int j = 0; j < container.size(); j++)
             {
                 if(!container[j]->name.compare(con))
                 {
+
+                    // std::cout << container[j]->name << " ";
+                    // std::cout <<  container[j]->items.size() << std::endl;
                     if(container[j]->items.size() == 0)
                     {
                         std::cout << con << " is empty." << std::endl;
@@ -318,11 +296,33 @@ void open_container(string con)
             }
         }
     }
+    if(i == p1.current_room->containers.size())
+    {
+        std::cout << "No " << con << " in this room" << std::endl;
+        return;
+    }
 }
 void room_check(string input)
 {
     int border_index;
     int count = 0;
+
+    if(!input.compare("n"))
+    {
+        input = "north";
+    }
+    else if (!input.compare("s"))
+    {
+        input = "south";
+    }
+    else if (!input.compare("e"))
+    {
+        input = "east";
+    }
+    else if(!input.compare("w"))
+    {
+        input = "west";
+    }
     for(border_index = 0; border_index < p1.current_room->border_rooms.size(); border_index++)
     {
         if(!p1.current_room->border_rooms[border_index]->Direction.compare(input))
@@ -332,6 +332,7 @@ void room_check(string input)
                 if(!room[i]->name.compare(p1.current_room->border_rooms[border_index]->Name))
                 {
                     p1.current_room = room[i];
+                    std::cout << p1.current_room->description << std::endl;
                     return;
                 }
             }
@@ -352,18 +353,19 @@ void room_check(string input)
 void take(string Item)
 {
     int i;
+    // std::cout << Item << std::endl;
     for(i = 0; i  < p1.current_room->items.size(); i++)
     {
-        if(!p1.current_room->items[i].compare(Item))
+        if(!(p1.current_room->items[i].compare(Item)))
         {
-            std::cout << "Item" << Item << "added to inventory" << std::endl;
+            std::cout << "Item " << Item << " added to inventory" << std::endl;
             p1.inventory.push_back(p1.current_room->items[i]);
             return;
         }
     }
     if(i == p1.current_room->items.size())
     {
-        std::cout << Item << "not in room." << std::endl;
+        std::cout << Item << " not in room." << std::endl;
         return;
     }
 }
@@ -397,21 +399,22 @@ void turn_on(string Item)
 void drop(string input)
 {
     int i;
-    int count = 0;
+    // int count = 0;
     for(i = 0; i < p1.inventory.size(); i++)
     {
         if(!p1.inventory[i].compare(input))
         {
             break;
         }
-        count += 1;
+        // count += 1;
     }
-    if(count == i)
+    if(p1.inventory.size() == i)
     {
         std::cout << input << " not in inventory." << std::endl;
         return;
     }
     p1.current_room->items.push_back(p1.inventory[i]);
+    p1.inventory.erase(p1.inventory.begin()+i);
     std::cout << input << " dropped." << std::endl;
     return;
 }
@@ -433,6 +436,7 @@ void put(string input)
         std::cout << "Item not in inventory" << std::endl;
         return;
     }
+
     for(int i = 0; i < p1.current_room->containers.size(); i++)
     {
         if(!p1.current_room->containers[i].compare(loc))
@@ -443,10 +447,23 @@ void put(string input)
                 {
                     for(int k = 0; k < p1.inventory.size(); k++)
                     {
-                        if(!p1.inventory[k].compare(item))
+                        if(container[j]->accept.size() > 0)
                         {
-                            std::cout << "Item" << p1.inventory[k] << "added to " << container[j]->name << std::endl;
+                            for(int b = 0;  b < container[j]->accept.size(); b++)
+                            {
+                                if(!container[j]->accept[b].compare(item))
+                                {
+                                    container[j]->items.push_back(p1.inventory[k]);
+                                    // p1.inventory.erase(p1.inventory.begin()+k);
+                                    p1.inventory.erase(p1.inventory.begin() + k);
+                                }
+                            }
+                        }
+                        else if(!p1.inventory[k].compare(item))
+                        {
+                            std::cout << "Item " << p1.inventory[k] << " added to " << container[j]->name << std::endl;
                             container[j]->items.push_back(p1.inventory[k]);
+                            // p1.inventory.erase(p1.inventory.begin()+k);
                             p1.inventory.erase(p1.inventory.begin() + k);
                         }
                     }
@@ -494,6 +511,7 @@ bool check_status(Trigger * info)
 
     string o_type = type_of(object);
 
+    // std::cout << o_type << std::endl;
     if(!o_type.compare("Room"))
     {
         for(int i = 0; i < room.size(); i++)
@@ -566,7 +584,7 @@ bool check_status(Trigger * info)
             }
         }
     }
-    else if (!o_type.compare("Creature"))
+    else if(!o_type.compare("Creature"))
     {
         for(int i = 0; i < creature.size(); i++)
         {
@@ -597,6 +615,8 @@ void attack(string input)
     std::size_t index = input.find(" with ");
     string c = input.substr(0, index);
     string weapon = input.substr(index+6);
+    // std::cout << c << std::endl;
+    // std::cout << weapon << std::endl;
     int a;
     for(a = 0;  a < p1.inventory.size(); a++)
     {
@@ -607,34 +627,55 @@ void attack(string input)
     }
     if(a == p1.inventory.size())
     {
-        std::cout <<" Error" << std::endl;
+        std::cout <<"Error: Item not in inventory" << std::endl;
         return;
     }
     int i;
+    // std::cout << p1.current_room->creatures.size() << std::endl;
     for(i = 0;  i < p1.current_room->creatures.size(); i++)
     {
+        // std::cout << p1.current_room->creatures[i] << std::endl;
         if(!p1.current_room->creatures[i].compare(c))
         {
             for(int j = 0; j < creature.size(); j++)
             {
-                if(!creature[i]->name.compare(c))
+                if(!creature[j]->name.compare(c))
                 {
                     std::cout << "You assault " << c << " with the " << weapon << std::endl;
-                    for(int k = 0; k < creature[i]->vulnerability.size(); k++)
+                    int k;
+
+                    for(k = 0; k < creature[j]->vulnerability.size(); k++)
                     {
-                        if(!creature[i]->vulnerability[k].compare(weapon))
+                        if(!creature[j]->vulnerability[k].compare(weapon))
                         {
-                            check_status(creature[i]->t);
+                            if(creature[j]->attackF)
+                            {
+                                if(creature[j]->aprint)
+                                {
+                                    std::cout << creature[j]->print << std::endl;
+                                }
+                                for(int g = 0; g < creature[j]->toDoActions.size(); g++)
+                                {
+                                    perform_action(creature[j]->toDoActions[g]);
+                                }
+                                return;
+                            }
                         }
                     }
+                    // if(k == creature[j]->vulnerability.size())
+                    // {
+                    //     std::cout << "Item not effective." << std::endl;
+                    //     return;
+                    // }
                 }
             }
         }
     }
-    if(i == p1.current_room->creatures.size())
-    {
-        std::cout << "Error" << std::endl;
-    }
+    // if(i == p1.current_room->creatures.size())
+    // {
+    //     std::cout << "No such creature in Room" << std::endl;
+    //     return;
+    // }
 }
 void parse_input(string input)
 {
@@ -653,8 +694,8 @@ void parse_input(string input)
         }
         else
         {
-            input.erase(0,4);
-            take(input);
+            // std::cout << input << std::endl;
+            take(input.erase(0,5));
         }
     }
     else if(input.find("read") != string::npos)
@@ -668,8 +709,20 @@ void parse_input(string input)
         }
         else
         {
-            input.erase(0,4);
+            input.erase(0,5);
             read_item(input);
+        }
+    }
+    else if(input.compare("open exit") == 0)
+    {
+        if(p1.current_room->type == "exit")
+        {
+            Game_over();
+        }
+        else
+        {
+            std::cout << "Room not exit" << std::endl;
+            return;
         }
     }
     else if(input.find("open") != string::npos)
@@ -683,15 +736,7 @@ void parse_input(string input)
         }
         else
         {
-            input.erase(0,4);
-            open_container(input);
-        }
-    }
-    else if(input.compare("open exit") == 0)
-    {
-        if(p1.current_room->type == "exit")
-        {
-            Game_over();
+            open_container(input.erase(0,5));
         }
     }
     else if(input.compare("i") == 0)
@@ -702,7 +747,7 @@ void parse_input(string input)
     {
         if(input.size() > 3)
         {
-            put(input.erase(0, 3));
+            put(input.erase(0, 4));
         }
         else
         {
@@ -711,11 +756,11 @@ void parse_input(string input)
     }
     else if(input.find("drop") != string::npos)
     {
-        drop(input.erase(0, 4));
+        drop(input.erase(0, 5));
     }
     else if(input.find("turn on") != string::npos)
     {
-        turn_on(input.erase(0,8));
+        turn_on(input.erase(0,9));
     }
     else if(input.find("attack") != string::npos)
     {
@@ -723,9 +768,33 @@ void parse_input(string input)
         attack(input.erase(0, 7));
     }
 }
-
-
-
+void perform_action(string a)
+{
+    if(a.find("Game Over") != string::npos)
+    {
+        Game_over();
+        return;
+    }
+    else if(a.find("Add") != string::npos)
+    {
+        string temp = a.erase(0,4);
+        Add(temp);
+        return;
+    }
+    else if(a.find("Delete") != string::npos)
+    {
+        string temp = a.erase(0,7);
+        Delete(temp);
+        return;
+    }
+    else if(a.find("Update") != string::npos)
+    {
+        string temp = a.erase(0, 7);
+        Update(temp);
+        return;
+    }
+    parse_input(a);
+}
 bool check_for_ownership(Trigger * info)
 {
     string owner = info->own->owner;
@@ -743,6 +812,7 @@ bool check_for_ownership(Trigger * info)
                     if(info->printIdx)
                     {
                         std::cout << info->print << std::endl;
+                        // info->printIdx = false;
                     }
                     if(info->actionIdx)
                     {
@@ -1014,9 +1084,9 @@ bool check_for_ownership(Trigger * info)
     }
     return false;
 }
-void trigger_command(string input)
+bool trigger_command(string input)
 {
-    bool temp = false;
+    bool temp1 = false;
     for(int i = 0; i < p1.current_room->triggers.size(); i++)
     {
         Trigger * trig = p1.current_room->triggers[i];
@@ -1026,20 +1096,20 @@ void trigger_command(string input)
             {
                 if(trig->condition_count == 3)
                 {
-                    temp = check_for_ownership(trig);
+                    temp1 = check_for_ownership(trig);
                 }
                 else if(trig->condition_count == 2)
                 {
-                    temp = check_status(trig);
+                    temp1 = check_status(trig);
                 }
-                else if(temp == true)
+                else if(temp1 == true)
                 {
                     trig->single = true;
                 }
             }
         }
     }
-    temp = false;
+    bool temp2 = false;
     for(int i = 0 ; i < p1.current_room->containers.size(); i++)
     {
         for(int j = 0; j < container.size(); j++)
@@ -1057,13 +1127,13 @@ void trigger_command(string input)
 
                             if(trig->condition_count == 2)
                             {
-                                temp = check_status(trig);
+                                temp2 = check_status(trig);
                             }
                             else if(trig->condition_count == 3)
                             {
-                                temp = check_for_ownership(trig);
+                                temp2 = check_for_ownership(trig);
                             }
-                            else if(temp == true)
+                            else if(temp2 == true)
                             {
                                 trig->single = true;
                             }
@@ -1073,7 +1143,7 @@ void trigger_command(string input)
             }
         }
     }
-    temp = false;
+    bool temp3 = false;
     for(int i = 0 ; i < p1.current_room->creatures.size(); i++)
     {
         for(int j = 0; j < creature.size(); j++)
@@ -1090,13 +1160,13 @@ void trigger_command(string input)
                         {
                             if(trig->condition_count == 2)
                             {
-                                temp = check_status(trig);
+                                temp3 = check_status(trig);
                             }
                             else if(trig->condition_count == 3)
                             {
-                                temp = check_for_ownership(trig);
+                                temp3 = check_for_ownership(trig);
                             }
-                            else if(temp == true)
+                            else if(temp3 == true)
                             {
                                 trig->single = true;
                             }
@@ -1106,7 +1176,7 @@ void trigger_command(string input)
             }
         }
     }
-    temp = false;
+    bool temp4 = false;
     for(int i = 0 ; i < p1.inventory.size(); i++)
     {
         for(int j = 0; j < item.size(); j++)
@@ -1122,13 +1192,13 @@ void trigger_command(string input)
                         {
                             if(trig->condition_count == 3)
                             {
-                                temp = check_for_ownership(trig);
+                                temp4 = check_for_ownership(trig);
                             }
                             else if(trig->condition_count == 2)
                             {
-                                temp = check_status(trig);
+                                temp4 = check_status(trig);
                             }
-                            else if(temp == true)
+                            else if(temp4 == true)
                             {
                                 trig->single = true;
                             }
@@ -1138,11 +1208,12 @@ void trigger_command(string input)
             }
         }
     }
+    bool fo = temp1 || temp2 || temp3 || temp4;
+    return fo;
 }
 bool check_non_command_triggers()
 {
-    bool CM_trigRoom;
-
+    bool CM_trigRoom = false;
     for(int i = 0; i < p1.current_room->triggers.size(); i++)
     {
         Trigger * trig = p1.current_room->triggers[i];
@@ -1165,7 +1236,7 @@ bool check_non_command_triggers()
             }
         }
     }
-    bool CM_trigItem;
+    bool CM_trigItem = false;
 
     for(int i = 0 ; i < p1.current_room->items.size(); i++)
     {
@@ -1198,12 +1269,13 @@ bool check_non_command_triggers()
             }
         }
     }
-    bool CM_trigcreature;
+    bool CM_trigcreature = false;
 
     for(int i = 0 ; i < p1.current_room->creatures.size(); i++)
     {
         for(int j = 0; j < creature.size(); j++)
         {
+
             if(!p1.current_room->creatures[i].compare(creature[j]->name))
             {
                 for(int a = 0; a < creature[j]->trigger.size(); a++)
@@ -1231,7 +1303,7 @@ bool check_non_command_triggers()
             }
         }
     }
-    bool CM_trigcontainer;
+    bool CM_trigcontainer = false;
     for(int i = 0 ; i < p1.current_room->containers.size(); i++)
     {
         for(int j = 0; j < container.size(); j++)
